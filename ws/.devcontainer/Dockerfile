@@ -1,28 +1,34 @@
-FROM ros:jazzy
-ARG USERNAME=USERNAME
+FROM ros:jazzy-ros-base
+
+ARG USERNAME=norden
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-# Delete user if it exists in container (e.g Ubuntu Noble: ubuntu)
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
-# Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    #
-    # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python3-pip
-ENV SHELL /bin/bash
+RUN groupadd -g ${USER_GID} ${USERNAME} \
+ && useradd -m -s /bin/bash -u ${USER_UID} -g ${USER_GID} ${USERNAME} \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends sudo \
+ && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
+ && chmod 0440 /etc/sudoers.d/${USERNAME}
 
-# ********************************************************
-# * Anything else you want to do like clean up goes here *
-# ********************************************************
 
-# [Optional] Set the default user. Omit if you want to keep the default as root.
-USER $USERNAME
-CMD ["/bin/bash"]
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3-colcon-common-extensions python3-rosdep \
+      ros-jazzy-ros2bag ros-jazzy-rosbag2-storage-sqlite3 ros-jazzy-rosbag2-storage-mcap \
+      git build-essential cmake \
+      python3-pip 
+      
+RUN pip3 install --no-cache-dir --break-system-packages rosbags rosbags-image tqdm
+ 
+RUN rm -rf /var/lib/apt/lists/*
+
+
+RUN rosdep init || true
+
+USER ${USERNAME}
+WORKDIR /home/ws
+CMD ["bash"]
