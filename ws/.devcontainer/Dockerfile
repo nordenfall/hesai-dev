@@ -20,12 +20,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       python3-colcon-common-extensions python3-rosdep \
       ros-jazzy-ros2bag ros-jazzy-rosbag2-storage-sqlite3 ros-jazzy-rosbag2-storage-mcap \
       git build-essential cmake \
-      python3-pip 
-      
-RUN pip3 install --no-cache-dir --break-system-packages rosbags rosbags-image tqdm
- 
-RUN rm -rf /var/lib/apt/lists/*
+      python3-pip \
+      python3-venv
 
+# RUN python3 -m venv .venv
+# RUN source .venv/bin/activate && pip3 install --no-cache-dir rosbags rosbags-image tqdm
+
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN rosdep init || true
 
