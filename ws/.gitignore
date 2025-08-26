@@ -1,3 +1,4 @@
 *.bag
 *.db3
 *.yaml
+*.venv
