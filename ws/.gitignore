@@ -2,3 +2,6 @@
 *.db3
 *.yaml
 *.venv
+*.png
+*.jpg
+*.mp4
