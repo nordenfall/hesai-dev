@@ -1,32 +1,29 @@
 from pathlib import Path
-import tempfile
+import shutil
 from rosbags.highlevel import AnyReader
 from rosbags.image import message_to_cvimage
 import argparse
 import numpy as np, cv2
-import os, subprocess, shutil
+import os, subprocess
 
 
 
-def make_video(out, pics="pics"):
+def make_video(out, pics="pics", frame_rate=20):
     out_dir = Path(f"video/{out}.mp4")
-    files = sorted(Path(pics).glob("*.png"), key=lambda p: int(p.stem))
-    if len(files) == 1:
-        subprocess.run(["ffmpeg","-y","-loop","1","-t","3","-i",str(files[0]),
-                        "-vf","scale=ceil(iw/2)*2:ceil(ih/2)*2",
-                        "-c:v","libx264","-crf","20","-pix_fmt","yuv420p","-movflags","+faststart",out_dir], check=True)
-        return
-    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".txt") as f:
-        for a,b in zip(files, files[1:]):
-            f.write(f"file '{a.as_posix()}'\n")
-            dt = max((int(b.stem)-int(a.stem))/1e9, 1/1000)
-            f.write(f"duration {dt:.9f}\n")
-        f.write(f"file '{files[-1].as_posix()}'\n")
-        lst = f.name
-    subprocess.run(["ffmpeg","-y","-f","concat","-safe","0","-i",lst,
-                    "-vsync","vfr","-vf","scale=ceil(iw/2)*2:ceil(ih/2)*2",
-                    "-c:v","libx264","-crf","20","-pix_fmt","yuv420p","-movflags","+faststart",out_dir], check=True)
-    Path(lst).unlink(missing_ok=True)
+    out_dir.parent.mkdir(parents=True, exist_ok=True)
+    
+    files = sorted(Path(pics).glob("*.png"), key=lambda p: p.stem)
+    
+    if files:
+        subprocess.run([
+            "ffmpeg", "-y", "-framerate", str(frame_rate),
+            "-pattern_type", "glob", "-i", f"{pics}/*.png",
+            "-vf", "scale=ceil(iw/2)*2:ceil(ih/2)*2",
+            "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p",
+            "-movflags", "+faststart", str(out_dir)
+        ], check=True)
+    shutil.rmtree(Path(pics))
+    print("Done")
 
 def extract_pictures(p: Path, out: Path, topic: str):
     os.makedirs("pics", exist_ok=True)
