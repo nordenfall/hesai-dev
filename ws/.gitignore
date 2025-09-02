@@ -1,5 +1,6 @@
 *.bag
 *.db3
+*.mcap
 *.yaml
 *.venv
 *.png

@@ -1,15 +1,15 @@
 {
     "name": "ROS 2 Development Container",
     "privileged": true,
-    "remoteUser": "norden",
+    "remoteUser": "norden", //поменять на свой
     "build": {
         "dockerfile": "Dockerfile",
         "args": {
-            "USERNAME": "norden"
+            "USERNAME": "norden" //поменять на свой
         }
     },
-    "workspaceFolder": "/home/hesai-dev/ws",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/hesai-dev/ws,type=bind",
+    "workspaceFolder": "/home/hesai-dev/ws", //поменять на свою
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/hesai-dev/ws,type=bind", //помнеять на свою
     "customizations": {
         "vscode": {
             "extensions":[
@@ -37,5 +37,5 @@
        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
     ],
-    "postCreateCommand": "bash -lc 'set -e; rosdep update || true; rosdep install --from-paths src --ignore-src -y || true; python3 -m venv .venv; .venv/bin/pip install -U pip wheel setuptools; .venv/bin/pip install --no-cache-dir rosbags rosbags-image tqdm'"
+    "postCreateCommand": "bash -lc 'set -e; rosdep update || true; rosdep install --from-paths src --ignore-src -y || true; python3 -m venv .venv; chmod +x topics.bash; .venv/bin/pip install -U pip wheel setuptools; .venv/bin/pip install --no-cache-dir rosbags rosbags-image tqdm'"
 }

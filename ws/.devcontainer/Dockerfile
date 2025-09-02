@@ -19,7 +19,7 @@ RUN groupadd -g ${USER_GID} ${USERNAME} \
 RUN apt-get update && apt-get install -y --no-install-recommends \
       python3-colcon-common-extensions python3-rosdep \
       ros-jazzy-ros2bag ros-jazzy-rosbag2-storage-sqlite3 ros-jazzy-rosbag2-storage-mcap \
-      git build-essential cmake \
+      git build-essential cmake ffmpeg\
       python3-pip \
       python3-venv
 
@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # RUN source .venv/bin/activate && pip3 install --no-cache-dir rosbags rosbags-image tqdm
 
 RUN rm -rf /var/lib/apt/lists/*
-
+# RUN chmod +x topics.bash
 RUN rosdep init || true
 
 USER ${USERNAME}
