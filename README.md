@@ -1,7 +1,7 @@
 # bag2mp4
 
 ## Подготовка к работе
-- Установить расширение DevContainer в VScode
+- Установить расширение Remote Development в VScode
 - Исправить переменные .devcontainer на свои 
 - Собрать и открыть контейнер через DevContainer
 
