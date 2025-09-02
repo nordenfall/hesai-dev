@@ -1,4 +1,4 @@
-# bag2mp4 - конвертер .bag ros1/2 в mp4 25fps
+# bag2mp4
 
 ## Подготовка к работе
 - Установить расширение DevContainer в VScode
@@ -14,3 +14,10 @@
   - Создает из картинок видео
   - Удаляет директория с картинками
 
+## Пример использования
+1. Конвертировать файл в формат ros2-bag. В bag файле могут находиться пакеты, зависимостей для расшифровки которых может быть не предустановлено в базовом контейнере (Missing msgtype in destination, copying from source), эти топики будут пропущены, однако, как правило, для работы с картинками все пакеты уже есть.
+<img width="1490" height="359" alt="image" src="https://github.com/user-attachments/assets/6053a26d-645b-4c87-8ac8-4260acd6ea63" />
+
+2. Извлечь из директории с ros2-bag картинки и конверитровать их в .mp4 (20fps)
+<img width="1291" height="73" alt="image" src="https://github.com/user-attachments/assets/a72531e5-b675-4e86-8030-e25470f8bc40" />
+<img width="1409" height="493" alt="image" src="https://github.com/user-attachments/assets/e5d19a0c-2f3a-47c8-bfd0-e573eb403000" />
